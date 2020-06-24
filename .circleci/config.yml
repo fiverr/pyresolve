@@ -1,0 +1,24 @@
+version: 2.1
+
+jobs:
+  tests:
+    working_directory: ~/app
+    docker:
+      - image: circleci/python:3-stretch
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: sudo pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: python -m pytest -vv -s
+      - run:
+          name: Check code style
+          command: pycodestyle . --max-line-length=119 --exclude venv
+
+workflows:
+  version: 2.1
+  ci:
+    jobs:
+      - tests
