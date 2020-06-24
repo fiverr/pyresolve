@@ -5,20 +5,19 @@ with open("README.md", "r") as readme:
 
 setup(
     name="pyresolve",
-    version="0.0.1",
-    author="omrilotan",
-    author_email="omri@hamadgera.com",
+    version="0.1.0",
+    author="fiverr",
+    author_email="devops@fiverr.com",
     description="Resolve dot notation from dictionary",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/omrilotan/pyresolve",
+    url="https://github.com/fiverr/pyresolve",
     license="MIT",
     packages=['pyresolve'],
     include_package_data=True,
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3',
+    python_requires='>=2',
 )
