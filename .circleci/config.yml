@@ -1,0 +1,60 @@
+version: 2.1
+
+commands:
+  tests:
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: sudo pip install pytest pycodestyle
+      - run:
+          name: Run tests
+          command: python -m pytest -vv -s
+      - run:
+          name: Check code style
+          command: pycodestyle . --max-line-length=119 --exclude venv
+
+jobs:
+  tests_py_2:
+    working_directory: ~/app
+    docker:
+      - image: circleci/python:2-stretch
+    steps:
+      - tests
+  tests_py_3:
+    working_directory: ~/app
+    docker:
+      - image: circleci/python:3-stretch
+    steps:
+      - tests
+  publish:
+    working_directory: ~/app
+    docker:
+      - image: circleci/python:3-stretch
+    steps:
+      - checkout
+      - run:
+          name: Install build tools
+          command: sudo pip install setuptools wheel twine
+      - run:
+          name: build
+          command: python setup.py sdist bdist_wheel
+      - run:
+          name: upload
+          command: python -m twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD --skip-existing dist/*
+
+
+workflows:
+  version: 2.1
+  ci:
+    jobs:
+      - tests_py_2
+      - tests_py_3
+      - publish:
+          requires:
+            - tests_py_2
+            - tests_py_3
+          filters:
+            branches:
+              only:
+                - master

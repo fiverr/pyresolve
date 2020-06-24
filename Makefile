@@ -7,14 +7,6 @@ prepare :
 start :
 	source venv/bin/activate
 
-build :
-	# pip install setuptools wheel
-	python setup.py sdist bdist_wheel
-
-upload :
-	# pip install twine
-	python -m twine upload dist/*
-
 test :
 	python -m pytest -vv -s
 
