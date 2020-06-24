@@ -16,9 +16,32 @@ jobs:
       - run:
           name: Check code style
           command: pycodestyle . --max-line-length=119 --exclude venv
+  publish:
+    working_directory: ~/app
+    docker:
+      - image: circleci/python:3-stretch
+    steps:
+      - checkout
+      - run:
+          name: Install build tools
+          command: pip install setuptools wheel twine
+      - run:
+          name: build
+          command: python setup.py sdist bdist_wheel
+      - run:
+          name: upload
+          command: python -m twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD --skip-existing dist/*
+
 
 workflows:
   version: 2.1
   ci:
     jobs:
       - tests
+      - publish:
+          requires:
+            - tests
+          filters:
+            branches:
+              only:
+                - master
