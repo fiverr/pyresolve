@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 def resolve(obj, path, fallback=None):
     """
     Retrieve nested properties safely

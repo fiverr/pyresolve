@@ -12,5 +12,9 @@ def test_missing_prop():
     assert resolve(my_dictionary, "outer.missing.something") is None
 
 
-def test_default_fallback():
+def test_fallback_value_false():
     assert resolve(my_dictionary, "outer.missing.something", False) is False
+
+
+def test_fallback_value_list():
+    assert resolve(my_dictionary, "outer.missing.something", []) == []
