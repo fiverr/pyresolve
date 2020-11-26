@@ -1,11 +1,40 @@
 version: 2.1
-
-commands:
-  tests:
+workflows:
+  version: 2.1
+  ci:
+    jobs:
+      - test:
+          context: org-global
+          matrix:
+            parameters:
+              image:
+                - circleci/python:2-stretch
+                - circleci/python:3-stretch
+      - publish:
+          context: org-global
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+jobs:
+  test:
+    parameters:
+      image:
+        description: "docker image"
+        default: "circleci/python:latest"
+        type: string
+    working_directory: ~/app
+    docker:
+      - image: <<parameters.image>>
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install test tools
           command: sudo pip install pytest pycodestyle
       - run:
           name: Run tests
@@ -13,26 +42,24 @@ commands:
       - run:
           name: Check code style
           command: pycodestyle . --max-line-length=119 --exclude venv
-
-jobs:
-  tests_py_2:
-    working_directory: ~/app
-    docker:
-      - image: circleci/python:2-stretch
-    steps:
-      - tests
-  tests_py_3:
-    working_directory: ~/app
-    docker:
-      - image: circleci/python:3-stretch
-    steps:
-      - tests
   publish:
     working_directory: ~/app
     docker:
       - image: circleci/python:3-stretch
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     steps:
       - checkout
+      - run:
+          name: Check if publishing is needed
+          command: |
+            sudo pip install johnnydep .
+            JOHNNYDEP_FIELDS=version_installed,version_latest johnnydep pyresolve -v 0 -o json > info
+            export INSTALLED=$(cat info | jq -c ".[0].version_installed")
+            export LATEST=$(cat info | jq -c ".[0].version_latest")
+
+            [ $INSTALLED = $LATEST ] && circleci-agent step halt
       - run:
           name: Install build tools
           command: sudo pip install setuptools wheel twine
@@ -42,19 +69,3 @@ jobs:
       - run:
           name: upload
           command: python -m twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD --skip-existing dist/*
-
-
-workflows:
-  version: 2.1
-  ci:
-    jobs:
-      - tests_py_2
-      - tests_py_3
-      - publish:
-          requires:
-            - tests_py_2
-            - tests_py_3
-          filters:
-            branches:
-              only:
-                - master
