@@ -7,6 +7,10 @@ from pyresolve import resolve
 
 my_dictionary = {"out":{"middle":{"in":"Balue"}}}
 
+# Before
+my_dictionary.get('out', {}).get('middle', {}).get('in')
+
+# After
 resolve(my_dictionary, "out.middle.in") # "Balue"
 ```
 
@@ -18,6 +22,12 @@ resolve(my_dictionary, "outer.missing.something") # None
 Can specify a different default value
 ```py
 resolve(my_dictionary, "outer.missing.something", []) # []
+```
+
+Supports index in list
+```py
+dictionary_with_list = {"users": [{"name":"Joe"}, {"name":"Jane"}]}
+resolve(my_dictionary, "users.1.name") # Jane
 ```
 
 Install

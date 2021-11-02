@@ -5,7 +5,7 @@ with open("README.md", "r") as readme:
 
 setup(
     name="pyresolve",
-    version="1.0.0",
+    version="1.1.0",
     author="fiverr",
     author_email="devops@fiverr.com",
     description="Resolve dot notation from dictionary",

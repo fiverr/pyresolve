@@ -16,6 +16,9 @@ def resolve(obj, path, fallback=None):
     for name in path.split("."):
         if name in obj:
             obj = obj[name]
+        elif isinstance(obj, list) and name.isdigit():
+            index = int(name)
+            obj = obj[index] if index < len(obj) else None
         else:
             return fallback
     return obj
