@@ -3,7 +3,7 @@ from pyresolve import resolve
 
 my_dictionary = {"outer": {"middle": {"inner": "Balue"}}}
 dictionary_with_list = {"list": ["one", "two", list("abcdefghijklmnop")]}
-users_list = {"users": [{"name":"Joe"}, {"name":"Jane"}]}
+users_list = {"users": [{"name": "Joe"}, {"name": "Jane"}]}
 
 
 def test_happy_flow():
