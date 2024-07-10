@@ -34,8 +34,16 @@ def test_dictionary_with_list_nested():
     assert resolve(dictionary_with_list, "list.2.012") is "m"
 
 
+def test_dictionary_with_list_syntax():
+    assert resolve(dictionary_with_list, "list[2][1]") is "b"
+
+
+def test_list_as_target():
+    assert resolve(dictionary_with_list["list"], "[2][1]") is "b"
+
+
 def test_dictionary_with_list_missing():
-    assert resolve(dictionary_with_list, "list.3") is None
+    assert resolve(dictionary_with_list, "3") is None
 
 
 def test_dictionary_list_dictionary():

@@ -30,6 +30,12 @@ dictionary_with_list = {"users": [{"name":"Joe"}, {"name":"Jane"}]}
 resolve(my_dictionary, "users.1.name") # Jane
 ```
 
+Supports list notation
+```py
+dictionary_with_list = {"users": [{"name":"Joe"}, {"name":"Jane"}]}
+resolve(my_dictionary, "users[1].name") # Jane
+```
+
 Install
 
 ```bash

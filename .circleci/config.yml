@@ -54,10 +54,8 @@ jobs:
       - run:
           name: Check if publishing is needed
           command: |
-            sudo pip install johnnydep .
-            JOHNNYDEP_FIELDS=version_installed,version_latest johnnydep pyresolve -v 0 -o json > info
-            export INSTALLED=$(cat info | jq -c ".[0].version_installed")
-            export LATEST=$(cat info | jq -c ".[0].version_latest")
+            INSTALLED=$(cat setup.py | grep version | awk -F '"' '{print $2}')
+            LATEST=$(curl -s "https://pypi.org/pypi/${CIRCLE_PROJECT_REPONAME}/json" | jq -r '.info.version')
 
             [ $INSTALLED = $LATEST ] && circleci-agent step halt
       - run:

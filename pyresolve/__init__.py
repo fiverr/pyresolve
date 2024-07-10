@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 
 def resolve(obj, path, fallback=None):
     """
@@ -13,7 +15,7 @@ def resolve(obj, path, fallback=None):
     :param fallback: what to return for unresolved items (default:None)
     :rtype: any
     """
-    for name in path.split("."):
+    for name in re.sub(r'^\.', '', re.sub(r'\[(\d+)\]', r'.\1', path)).split("."):
         if name in obj:
             obj = obj[name]
         elif isinstance(obj, list) and name.isdigit():
